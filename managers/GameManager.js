@@ -11,7 +11,10 @@ export default class GameManager
 
     createGame(players)
     {
-        let game = new Game(players);
-
+        let id;
+        //TODO
+        // create a unique id for the game
+        let game = new Game(players, id);
+        this.gameList.push(game)
     }
 }

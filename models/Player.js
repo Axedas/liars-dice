@@ -1,31 +1,24 @@
-class Player
-{
+class Player {
     id;
     dice;
 
-
-    constructor(id)
-    {
+    constructor(id) {
         this.id = id;
-        this.dice = [0,0,0,0,0];
+        this.dice = [0, 0, 0, 0, 0];
     }
 
     /**
      * Player dices values reset
      */
-    //rollDice(){}
+    rollDice() {
+        this.dice = this.dice.map(x => Math.floor(Math.random() * 6) + 1);
+    }
 
-    //getDice(){}
+    loseDie() {
+        this.dice.pop();
+    }
 
-    //loseDie(){}
-    //pop() or set length
-
-    //gainDie(){}
-
-
-    //useTimeBank(){}
-
-
-
-
+    gainDie() {
+        this.dice.push();
+    }
 }

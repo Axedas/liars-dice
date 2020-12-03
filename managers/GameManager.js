@@ -9,12 +9,14 @@ export default class GameManager
         this.gameList = [];
     };
 
-    createGame(players)
+    createGame(players, socket, id)
     {
-        let id;
-        //TODO
-        // create a unique id for the game
-        let game = new Game(players, id);
+        let game = new Game(players, id, socket);
         this.gameList.push(game)
+    }
+
+    createAvailableId()
+    {
+        //TODO generate uniqueId
     }
 }

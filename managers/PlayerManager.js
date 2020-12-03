@@ -9,12 +9,20 @@ export default class GameManager
         this.playerList = [];
     };
 
+    /**
+     * Creates a player with a unique id
+     * @returns {Player object representing the new player}
+     */
     createPlayer()
     {
         let id;
         //TODO
         // create a unique integer id for the player
-        this.playerList.push(new Player(id))
+
+        let player = new Player(id)
+        this.playerList.push(player);
+
+        return player;
     }
 
     getById(id)

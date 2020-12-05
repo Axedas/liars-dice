@@ -1,13 +1,13 @@
-import GameManager from './managers/GameManager.mjs'
-import PlayerManager from './managers/PlayerManager.mjs'
+import GameManager from './managers/GameManager.mjs';
+import PlayerManager from './managers/PlayerManager.mjs';
 import express from 'express';
-import {Server} from 'socket.io'
+import {Server} from 'socket.io';
 
 const port = 3000;
-const app = express()
+const app = express();
 const server = app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+  console.log(`Example app listening at http://localhost:${port}`);
+});
 const io = new Server(server,{
   //options for socket server
 });
@@ -23,7 +23,7 @@ io.on("connection", socket =>
   //will need to change this  to only create a player once per client,
   //currently, refreshing page destroys the socket and creates a new one
   let player = playerManager.createPlayer();
-  console.log(player.id+" connected to the server");
+  console.log(`${player.id} connected to the server`);
   socket.emit("connected",{ playerId: player.id });
 
   socket.on("changeName", (name) =>{
@@ -31,24 +31,30 @@ io.on("connection", socket =>
     //let the players in the room know that the players name changed
     if (player.inGame)
     {
-      let room = 'room' + player.currentGame.gameId
+      let room = `room${player.currentGame.gameId}`;
       socket.to(room).emit("playerChangedName",{playerId: player.id, newName: name });
     }
     //do we need to send a success to the client? I think no
   });
 
   //register handlers for lobby functions
-  socket.on("createGame")
+  socket.on("createGame", () =>
+  {
+    let game = gameManager.createGame();
+    player.currentGame = game;
+    socket.emit('createGameSuccess', game.id);
+  });
 
   //join the 'room' for the given game
   socket.on("joinGame",(gameId) =>
   {
     //TODO verify that the gameId is valid
 
-    socket.join('/room'+gameId);
+    socket.join(`/room${gameId}`);
     //let all users in the room know that a player joined, send their playerId with it
-    io.to('/room'+gameId).emit('playerJoinedGame',{playerId: player.id});
+    io.to(`/room${gameId}`).emit('playerJoinedGame',{playerId: player.id});
     player.currentGame = gameManager.getGameById(gameId);
+    socket.emit('joinGameSuccess', player.currentGame.players);
   });
 
   //when the client changes ready status in the lobby
@@ -57,7 +63,7 @@ io.on("connection", socket =>
     //set the players status
     player.ready = status
     //get the players current game, and send an event to players in the game indicating that the players status has changed
-    let room = 'room' + player.currentGame.gameId;
+    let room = `room${player.currentGame.gameId}`;
     socket.to(room).emit("playerChangedReadyStatus",{playerId: player.id, newStatus: status });
 
   });

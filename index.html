@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+</head>
+<body>
+<h1>Hello World!</h1>
+<div id="future"></div>
+<form id="form" id="chat_form">
+    <input id="chat_input" type="text">
+    <input type="submit" value="Send">
+</form>
+
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    let socket = io.connect('http://localhost:3000');
+    socket.on('connect', function(data) {
+        socket.emit('join', 'Hello World from client');
+    });
+    socket.on('connected', function(data){
+        console.log(data.playerId);
+        document.getElementById('future').text = data.playerId
+    });
+</script>
+</body>
+</html>

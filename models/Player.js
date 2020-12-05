@@ -1,6 +1,7 @@
 export default class Player {
     id;
     dice;
+    currentGame;
 
     constructor(id) {
         this.id = id;
@@ -21,4 +22,5 @@ export default class Player {
     gainDie() {
         this.dice.push();
     }
+
 }

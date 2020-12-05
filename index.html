@@ -6,10 +6,11 @@
 <body>
 <h1>Hello World!</h1>
 <div id="future"></div>
-<form id="form" id="chat_form">
-    <input id="chat_input" type="text">
-    <input type="submit" value="Send">
-</form>
+
+<input id="gameId_input" type="text">
+<button type="button" onclick = "joinGame()">Join Game</button>
+<button type="button" onclick = "createGame()">Create Game</button>
+
 
 
 
@@ -21,8 +22,16 @@
     });
     socket.on('connected', function(data){
         console.log(data.playerId);
-        document.getElementById('future').text = data.playerId
+        document.getElementById('future').innerText = data.playerId;
     });
+
+    function joinGame(){
+        socket.emit('joinGame', document.getElementById('gameId_input').value);
+    }
+
+    function createGame(){
+        socket.emit('createGame');
+    }
 </script>
 </body>
 </html>

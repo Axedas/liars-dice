@@ -1,6 +1,6 @@
-import Socket from './models/Socket.js'
+import Socket from '.././models/Socket.js'
 
-export class Game {
+export default class Game {
     players;
     currentBid;
     activePlayer;

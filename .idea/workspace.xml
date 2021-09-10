@@ -2,7 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0565d739-787f-4c99-9718-98cd5f42ed0b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/client/src/components/LobbyPlayer.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/App.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/HelloWorld.vue" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/HelloWorld.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/serverside/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/serverside/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/serverside/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/serverside/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/serverside/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/serverside/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/serverside/managers/PlayerManager.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/serverside/managers/PlayerManager.mjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,17 +39,21 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/client/src/components" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="ts.external.directory.path" value="C:\Users\Griff\Desktop\LiarsDice\client\client\node_modules\typescript\lib" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="ts.external.directory.path" value="C:\Users\Griff\Desktop\LiarsDice\client\node_modules\typescript\lib" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Griff\Desktop\LiarsDice\client\src\components" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Griff\Desktop\LiarsDice" />
       <recent name="C:\Users\Griff\Desktop\LiarsDice\serverside" />
@@ -57,6 +69,12 @@
       <updated>1606863377789</updated>
       <workItem from="1606863379059" duration="3226000" />
       <workItem from="1607727653574" duration="1131000" />
+      <workItem from="1609617138001" duration="96000" />
+      <workItem from="1609617245551" duration="7852000" />
+      <workItem from="1623866770247" duration="1355000" />
+      <workItem from="1625171068066" duration="724000" />
+      <workItem from="1625578318717" duration="1247000" />
+      <workItem from="1625666679020" duration="1930000" />
     </task>
     <servers />
   </component>

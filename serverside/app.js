@@ -6,10 +6,14 @@ import {Server} from 'socket.io';
 const port = 3000;
 const app = express();
 const server = app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+  console.log(`Dev Liars Dice app listening at http://localhost:${port}`);
 });
 const io = new Server(server,{
   //options for socket server
+  cors: {
+    origin: "http://localhost:8080",
+    methods: ["GET", "POST"]
+  }
 });
 
 const gameManager = new GameManager();
@@ -48,8 +52,6 @@ io.on("connection", socket =>
   //join the 'room' for the given game
   socket.on("joinGame",(gameId) =>
   {
-    //TODO verify that the gameId is valid
-
     socket.join(`/room${gameId}`);
     //let all users in the room know that a player joined, send their playerId with it
     io.to(`/room${gameId}`).emit('playerJoinedGame',{playerId: player.id});
@@ -65,7 +67,6 @@ io.on("connection", socket =>
     //get the players current game, and send an event to players in the game indicating that the players status has changed
     let room = `room${player.currentGame.gameId}`;
     socket.to(room).emit("playerChangedReadyStatus",{playerId: player.id, newStatus: status });
-
   });
 
   socket.on("startGame",()=>{

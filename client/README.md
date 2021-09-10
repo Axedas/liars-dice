@@ -22,3 +22,6 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+Use 'npm run serve' when building frontend for development, go to localhost:8080, and it should connect to backend

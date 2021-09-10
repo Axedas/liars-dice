@@ -1,6 +1,6 @@
 import Player from '.././models/Player.js'
 
-export default class GameManager
+export default class PlayerManager
 {
     playerList;
     numPlayers=0;

@@ -6,18 +6,17 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import HelloWorld from "./components/HelloWorld.vue";
-import io from 'socket.io-client';
+import io from "socket.io-client";
 
 export default defineComponent({
   name: "App",
   components: {
     HelloWorld
   },
-  data()
-  {
+  data() {
     return {
-      socket: io('localhost:3000')
-    }
+      socket: io("localhost:3000")
+    };
   }
 });
 </script>

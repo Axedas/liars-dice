@@ -2,12 +2,22 @@ import GameManager from './managers/GameManager.mjs';
 import PlayerManager from './managers/PlayerManager.mjs';
 import express from 'express';
 import {Server} from 'socket.io';
+import session from 'express-session';
 
 const port = 3000;
 const app = express();
 const server = app.listen(port, () => {
   console.log(`Dev Liars Dice app listening at http://localhost:${port}`);
 });
+
+//this creates a session object and attaches it to the express app
+const expSession = session({
+  secret: "my-secret",
+  resave: true,
+  saveUninitialized: true
+})
+app.use(expSession);
+
 const io = new Server(server,{
   //options for socket server
   cors: {
@@ -16,19 +26,35 @@ const io = new Server(server,{
   }
 });
 
+//this attaches the session to socket connections
+const wrap = middleware => (socket, next) => middleware(socket.request, {}, next);
+io.use(wrap(expSession));
+
 const gameManager = new GameManager();
 const playerManager = new PlayerManager();
 
 //Socket stuff, maybe export to a class
 io.on("connection", socket =>
 {
-  console.log('Client connected...');
-  //create a Player object for the connection and send a success to the client
-  //will need to change this  to only create a player once per client,
-  //currently, refreshing page destroys the socket and creates a new one
-  let player = playerManager.createPlayer();
-  console.log(`${player.id} connected to the server`);
-  socket.emit("connected",{ playerId: player.id });
+  console.log("trying to read session");
+  if (socket.request.session.player)
+  {
+    console.log(`Client reconnected... id: ${socket.request.session.player.id}`);
+  }
+  else
+  {
+    console.log('player: ' + socket.request.session.player);
+    console.log('Client connected...');
+    //create a Player object for the connection and send a success to the client
+    //will need to change this  to only create a player once per client,
+    //currently, refreshing page destroys the socket and creates a new one
+    let player = playerManager.createPlayer();
+    socket.request.session.player = player;
+    socket.request.session.save();
+    console.log('player: ' + socket.request.session.player);
+    console.log(`${player.id} connected to the server`);
+    socket.emit("connected",{ playerId: player.id });
+  }
 
   socket.on("changeName", (name) =>{
     player.name = name;

@@ -19,6 +19,7 @@
     let socket = io.connect('http://localhost:3000');
     // fired when connecting to server
     socket.on('connect', function(data) {
+        console.log('connectingtoserver...');
         socket.emit('join', 'Hello World from client');
     });
 

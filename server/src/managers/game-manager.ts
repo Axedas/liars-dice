@@ -36,3 +36,5 @@ export class GameManager implements Manager<Game> {
     return game;
   }
 }
+
+export const GAME_MANAGER = new GameManager();

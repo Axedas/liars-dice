@@ -6,12 +6,12 @@ export class SocketManager implements Manager<Socket> {
   /**
    * Map socketId -> Socket instance
    */
-  values: Record<string, Socket>;
+  readonly values: Record<string, Socket>;
 
   /**
    * Map gameId -> socketId
    */
-  gameSocketMap: Record<string, string>;
+  readonly gameSocketMap: Record<string, string>;
 
   /**
    * Base server
@@ -34,7 +34,7 @@ export class SocketManager implements Manager<Socket> {
   }
 
   getSocketFor(gameId: string) {
-    return this.values[gameId];
+    return this.values[this.gameSocketMap[gameId]];
   }
 
   getById(socketId: string) {
@@ -47,5 +47,3 @@ export class SocketManager implements Manager<Socket> {
     return socket;
   }
 }
-
-export default SocketManager;

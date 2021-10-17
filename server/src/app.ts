@@ -1,108 +1,109 @@
-import GameManager from './managers/GameManager.mjs';
-import PlayerManager from './managers/PlayerManager.mjs';
-import express from 'express';
-import {Server} from 'socket.io';
-import session from 'express-session';
+import express from "express";
+import session from "express-session";
+import { createServer } from "http";
+import { Server, Socket } from "socket.io";
+import { GAME_MANAGER, PLAYER_MANAGER, SocketManager } from "./managers";
+import { wrap } from "./util";
 
-const port = 3000;
-const app = express();
-const server = app.listen(port, () => {
-  console.log(`Dev Liars Dice app listening at http://localhost:${port}`);
-});
+const EXPRESS_INSTANCE = express();
 
 //this creates a session object and attaches it to the express app
-const expSession = session({
+const EXPRESS_SESSION = session({
   secret: "my-secret",
   resave: true,
-  saveUninitialized: true
-})
-app.use(expSession);
+  saveUninitialized: true,
+});
+EXPRESS_INSTANCE.use(EXPRESS_SESSION);
 
-const io = new Server(server,{
-  //options for socket server
+const HTTP_INSTANCE = createServer(EXPRESS_INSTANCE);
+const SOCKET_PORT = 3000;
+const SOCKET_OPTIONS = {
   cors: {
     origin: "http://localhost:8080",
-    methods: ["GET", "POST"]
-  }
-});
+    methods: ["GET", "POST"],
+  },
+};
+
+const SOCKET_INSTANCE = new Server(SOCKET_OPTIONS);
+const SOCKET_MANAGER = new SocketManager(SOCKET_INSTANCE);
+
+HTTP_INSTANCE.listen(SOCKET_PORT);
 
 //this attaches the session to socket connections
-const wrap = middleware => (socket, next) => middleware(socket.request, {}, next);
-io.use(wrap(expSession));
-
-const gameManager = new GameManager();
-const playerManager = new PlayerManager();
+SOCKET_INSTANCE.use(wrap(EXPRESS_SESSION));
 
 //Socket stuff, maybe export to a class
-io.on("connection", socket =>
-{
+SOCKET_INSTANCE.on("connection", (socket) => {
   console.log("trying to read session");
-  if (socket.request.session.player)
-  {
-    console.log(`Client reconnected... id: ${socket.request.session.player.id}`);
-  }
-  else
-  {
-    console.log('player: ' + socket.request.session.player);
-    console.log('Client connected...');
+  if (socket.request.session.player) {
+    console.log(
+      `Client reconnected... id: ${socket.request.session.player.id}`
+    );
+  } else {
+    console.log("player: " + socket.request.session.player);
+    console.log("Client connected...");
     //create a Player object for the connection and send a success to the client
     //will need to change this  to only create a player once per client,
     //currently, refreshing page destroys the socket and creates a new one
-    let player = playerManager.createPlayer();
+    let player = PLAYER_MANAGER.create();
     socket.request.session.player = player;
     socket.request.session.save();
-    console.log('player: ' + socket.request.session.player);
+    console.log("player: " + socket.request.session.player);
     console.log(`${player.id} connected to the server`);
-    socket.emit("connected",{ playerId: player.id });
+    socket.emit("connected", { playerId: player.id });
   }
 
-  socket.on("changeName", (name) =>{
+  socket.on("changeName", (name) => {
     player.name = name;
     //let the players in the room know that the players name changed
-    if (player.inGame)
-    {
+    if (player.inGame) {
       let room = `room${player.currentGame.gameId}`;
-      socket.to(room).emit("playerChangedName",{playerId: player.id, newName: name });
+      socket
+        .to(room)
+        .emit("playerChangedName", { playerId: player.id, newName: name });
     }
     //do we need to send a success to the client? I think no
   });
 
   //register handlers for lobby functions
-  socket.on("createGame", () =>
-  {
-    let game = gameManager.createGame();
+  socket.on("createGame", () => {
+    let game = GAME_MANAGER.create();
     player.currentGame = game;
-    socket.emit('createGameSuccess', game.id);
+    socket.emit("createGameSuccess", game.id);
   });
 
   //join the 'room' for the given game
-  socket.on("joinGame",(gameId) =>
-  {
+  socket.on("joinGame", (gameId) => {
     socket.join(`/room${gameId}`);
     //let all users in the room know that a player joined, send their playerId with it
-    io.to(`/room${gameId}`).emit('playerJoinedGame',{playerId: player.id});
+    io.to(`/room${gameId}`).emit("playerJoinedGame", { playerId: player.id });
     player.currentGame = gameManager.getGameById(gameId);
-    socket.emit('joinGameSuccess', player.currentGame.players);
+    socket.emit("joinGameSuccess", player.currentGame.players);
   });
 
   //when the client changes ready status in the lobby
-  socket.on("ready",(status) =>
-  {
+  socket.on("ready", (status) => {
     //set the players status
-    player.ready = status
+    player.ready = status;
     //get the players current game, and send an event to players in the game indicating that the players status has changed
     let room = `room${player.currentGame.gameId}`;
-    socket.to(room).emit("playerChangedReadyStatus",{playerId: player.id, newStatus: status });
+    socket.to(room).emit("playerChangedReadyStatus", {
+      playerId: player.id,
+      newStatus: status,
+    });
   });
 
-  socket.on("startGame",()=>{
+  socket.on("startGame", () => {
     //verify that this player is the host
-    if (!player.isHost){
+    if (!player.isHost) {
       //error here
     }
     //verify that all players are ready
-    if (!player.currentGame.players.every((player)=>{return player.ready}))
-    {
+    if (
+      !player.currentGame.players.every((player) => {
+        return player.ready;
+      })
+    ) {
       //error here
     }
     player.currentGame.startGame();
@@ -110,11 +111,11 @@ io.on("connection", socket =>
 });
 
 //serves static files such as html or in this case, node modules
-app.use(express.static('/node_modules'));
+EXPRESS_INSTANCE.use(express.static("/node_modules"));
 
 //this brings us to the index page when hitting the default url, for now https://localhost:3000
-app.get('/', function(req, res,next) {
-  res.sendFile(new URL('./index.html', import.meta.url).href.substr(8));
+EXPRESS_INSTANCE.get("/", function (_req, res, _next) {
+  res.sendFile(new URL("./index.html", import.meta.url).href.substr(8));
 });
 
 //this may return later, but for now we're gonna try to do most stuff through the socket
@@ -151,6 +152,3 @@ app.post('/bid',(req,res)=>{
 })*/
 
 //app.get('/gameState' )
-
-
-

@@ -4,7 +4,7 @@ export class Player {
   /**
    * Player's unique id.
    */
-  protected id: string;
+  readonly id: string;
 
   /**
    * Game that the player is currently in.

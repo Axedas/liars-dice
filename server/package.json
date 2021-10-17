@@ -1,11 +1,13 @@
 {
-  "name": "liarsdice",
-  "version": "1.0.0",
-  "description": "",
+  "name": "liars-dice",
+  "version": "0.0.1",
+  "description": "The classic game of Perudo/liar's dice.",
   "type": "module",
   "main": "app.js",
   "scripts": {
-    "start": "node --experimental-modules app.js",
+    "build": "tsc",
+    "lint": "tsc --noEmit && eslint \"**/*.{js,ts}\" --quiet --fix",
+    "start": "ts-node ./src/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -13,6 +15,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "express-session": "^1.17.2",
+    "http": "0.0.1-security",
     "socket.io": "^3.0.3",
     "uuid": "^8.3.2"
   },

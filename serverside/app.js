@@ -8,6 +8,7 @@ const app = express();
 const server = app.listen(port, () => {
   console.log(`Dev Liars Dice app listening at http://localhost:${port}`);
 });
+
 const io = new Server(server,{
   //options for socket server
   cors: {

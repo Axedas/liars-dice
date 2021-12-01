@@ -1,7 +1,7 @@
 <template>
     <div 
     className={isActive ? "cell active" : "cell"} v-show="cell"
-    @click= "setPlayerColor">
+    @click= "this.clickFunction">
     </div>
 </template>
 
@@ -16,10 +16,11 @@ export default defineComponent({
             type: Boolean
             default: false
         }
+        clickFunction: Function
     },
     methods: {
         setPlayerColor(event) {
-            player.color = activeColor
+            this.$store.dispatch('setPlayerColor', this.color)
         },
     }
 })

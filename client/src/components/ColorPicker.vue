@@ -1,49 +1,40 @@
 <template>
-    <div class="color-picker" v-show="color-picker">
-            <Cell
-            class="active"
-            @click="colorsMap">
-            </Cell>
-        <div v-if="" >
-        </div>
-        <div v-else>
-        </div>
+  <div class="color-picker" v-show="color - picker">
+    <Cell clickFunction=() => { this.toggleColorPicker } />
+    <div v-if="colorPickerOpen">
+      <Cell v-for="color of COLORS" clickFunction= () =>
+      {this.setPlayerColor(color) } />
     </div>
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-
-const COLORS = [
-    'red',
-    'orange',
-    'yellow',
-    'blue',
-    'white',
-    'black', 
-    'green', 
-    'pink',
-    'purple'
-]
+import { COLORS } from "../constants.ts";
 
 export default defineComponent({
-    name: 'colorPicker',
-    props: {
-
+  name: "colorPicker",
+  props: {},
+  methods: {
+    toggleColorPicker() {
+      if (this.$store.state.colorPickerOpen) {
+        this.$store.dispatch("hideColorPicker");
+      } else {
+        this.$store.dispatch("showColorPicker");
+      }
     },
-    methods: {
-        colorsMap(event) {
-            COLORS.map((color, index) => {
-                return <Cell
-                color= {color}
-                key= {index}
-                />
-            })
-        }
-    }
-})
+    setPlayerColor(color) {
+      this.$store.dispatch("setPlayerColor", color);
+    },
+  },
+  data() {
+    return {
+      colorPickerOpen: this.$store.state.colorPickerOpen,
+    };
+  },
+});
 </script>
 
-<style scoped>
+<style lang='scss' scoped>
 
 </style>
